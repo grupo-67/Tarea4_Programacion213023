@@ -1,0 +1,2 @@
+class systemmain:
+    pass
