@@ -3,12 +3,8 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk # Necesitarás: pip install Pillow
 import ctypes
+from utils.helpers import centrar_ventana
     
-def centrar_ventana(v, w, h):
-        v.update_idletasks()
-        x = (v.winfo_screenwidth() // 2) - (w // 2)
-        y = (v.winfo_screenheight() // 2) - (h // 2)
-        v.geometry(f'{w}x{h}+{x}+{y}')
 
 class LoginView:
     def __init__(self):
