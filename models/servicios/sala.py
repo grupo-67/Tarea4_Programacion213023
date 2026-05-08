@@ -35,3 +35,4 @@ class ServicioSala(Servicio):
     # Implementamos la descripción obligatoria
     def describir_servicio(self):
         return f"Sala de {self.tipo_sala} | Capacidad: {self.capacidad} personas | Tiempo: {self.horas}h"
+
