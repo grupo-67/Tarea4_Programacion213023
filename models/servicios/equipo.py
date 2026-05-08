@@ -1,7 +1,7 @@
 # importamos los comportamiento heredados de la clase padre Servicio
 from models.servicio import Servicio
 # Importamos la excepción personalizada
-from models.excepciones import DatosInvalidosError
+from utils.exceptions import DatosInvalidosError
 
 class ServicioEquipo(Servicio):
     def __init__(self, equipo_solicitado, cantidad_dias, precio_por_dia):
