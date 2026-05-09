@@ -2,7 +2,9 @@ import tkinter as tk
 from views.components.sidebar import Sidebar
 from views.panels.dashboard import DashboardPanel
 import ctypes
-#from views.panels.clientes import ClientesPanel
+from views.panels.clientes import ClientesPanel
+from views.panels.servicio import ServiciosPanel
+from views.panels.reservas import ReservasPanel
 
 class MainLayout(tk.Tk):
     def __init__(self):
@@ -41,8 +43,11 @@ class MainLayout(tk.Tk):
         if key == "dashboard":
             panel = DashboardPanel(self.content_area)
         elif key == "clientes":
-            print("Hola")
-            #panel = ClientesPanel(self.content_area)
+            panel = ClientesPanel(self.content_area)
+        elif key == "servicios":
+            panel = ServiciosPanel(self.content_area)
+        elif key == "reservas":
+            panel = ReservasPanel(self.content_area)
         else:
             panel = tk.Label(self.content_area, text="En desarrollo...")
 
