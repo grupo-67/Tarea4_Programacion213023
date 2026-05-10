@@ -1,5 +1,3 @@
-# controllers/cliente_controller.py
-
 from models.cliente import Cliente
 from utils.json_utils import JsonUtils
 from utils.logger import Logger
@@ -19,6 +17,15 @@ class ClienteController:
 
         try:
 
+            nombre = nombre.strip()
+            email = email.strip()
+            telefono = telefono.strip()
+
+            # VALIDACIONES
+            if not nombre or not email or not telefono:
+                raise Exception("Todos los campos son obligatorios")
+
+            # VALIDAR DUPLICADOS
             cliente_existente = self.buscar_cliente(email)
 
             if cliente_existente:
@@ -46,7 +53,7 @@ class ClienteController:
 
         for cliente in self.clientes:
 
-            if cliente._email == email:
+            if cliente.email == email:
                 return cliente
 
         return None
@@ -76,7 +83,7 @@ class ClienteController:
 
             JsonUtils.guardar_clientes(self.clientes)
 
-            return True, "Cliente eliminado"
+            return True, "Cliente eliminado correctamente"
 
         except Exception as e:
 

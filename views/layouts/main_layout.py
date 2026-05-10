@@ -2,6 +2,7 @@ import tkinter as tk
 from views.components.sidebar import Sidebar
 from views.panels.dashboard import DashboardPanel
 import ctypes
+from controllers.main_controlller import MainController
 from views.panels.clientes import ClientesPanel
 from views.panels.servicio import ServiciosPanel
 from views.panels.reservas import ReservasPanel
@@ -22,6 +23,8 @@ class MainLayout(tk.Tk):
         
         # Diccionario de paneles para evitar recrearlos (Opcional)
         self.paneles = {}
+        #controller principal
+        self.main_controller = MainController()
         
         # Contenedor para el contenido dinámico
         self.content_area = tk.Frame(self, bg="#F5F5F7")
@@ -41,13 +44,14 @@ class MainLayout(tk.Tk):
 
         # Selección de panel (SOLID: Podrías usar una Factory aquí si crece mucho)
         if key == "dashboard":
-            panel = DashboardPanel(self.content_area)
+            panel = DashboardPanel(self.content_area, self.main_controller)
         elif key == "clientes":
             panel = ClientesPanel(self.content_area)
         elif key == "servicios":
             panel = ServiciosPanel(self.content_area)
         elif key == "reservas":
-            panel = ReservasPanel(self.content_area)
+            panel = ReservasPanel(self.content_area,
+                                  self.main_controller.reserva_controller)
         else:
             panel = tk.Label(self.content_area, text="En desarrollo...")
 

@@ -1,7 +1,7 @@
 #importacion importante para el buen funcionamiento del controller login, usando el modelo o clase usuario y tkinter para el uso de alertas
 from models.usser import Usuario
 from tkinter import messagebox
-from views.systemmain import systemmain
+from views.layouts.main_layout import MainLayout
 
 #clase login
 class LoginController:
@@ -15,6 +15,6 @@ class LoginController:
         if self.usuario.validar_usuario(user, password):
             messagebox.showinfo("Success", "Correct login")
             self.view.ventana.destroy()
-            systemmain()
+            MainLayout()
         else:
             messagebox.showerror("Error", "Incorrect data")

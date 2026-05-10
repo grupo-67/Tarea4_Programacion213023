@@ -1,10 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import ctypes
 
 class NuevoServicioView(tk.Toplevel):
-    def __init__(self, parent):
+    def __init__(self, parent, controller):
         super().__init__(parent)
+        self.parent_panel = parent
+        self.controller = controller
         try:
             ctypes.windll.shcore.SetProcessDpiAwareness(1)
         except:
@@ -40,8 +43,14 @@ class NuevoServicioView(tk.Toplevel):
         self.dynamic_frame.pack(fill="both", expand=True)
 
         # Botón Guardar (inicialmente abajo)
-        self.btn_guardar = tk.Button(container, text="Guardar Servicio", bg="#4C6EC0", fg="white",
-                                     relief="flat", font=("Segoe UI", 10, "bold"), state="disabled")
+        self.btn_guardar = tk.Button( container,
+            text="Guardar Servicio",
+            bg="#4C6EC0",
+            fg="white",
+            relief="flat",
+            font=("Segoe UI", 10, "bold"),
+            state="disabled",
+            command=self.guardar_servicio)
         self.btn_guardar.pack(fill="x", pady=20, ipady=5)
 
     def actualizar_formulario(self, event):
@@ -60,25 +69,113 @@ class NuevoServicioView(tk.Toplevel):
             self.form_asesoria()
 
     def form_sala(self):
-        tk.Label(self.dynamic_frame, text="Tipo de Sala:", bg="white").pack(anchor="w")
-        ttk.Combobox(self.dynamic_frame, values=["Sala de Juntas", "Sala Audiovisual", "Biblioteca Virtual"], state="readonly").pack(fill="x", pady=5)
-        
-        tk.Label(self.dynamic_frame, text="Capacidad de personas:", bg="white").pack(anchor="w", pady=(10,0))
-        tk.Entry(self.dynamic_frame).pack(fill="x", pady=5)
-        
-        tk.Label(self.dynamic_frame, text="Precio por hora:", bg="white").pack(anchor="w", pady=(10,0))
-        tk.Entry(self.dynamic_frame).pack(fill="x", pady=5)
+
+        tk.Label(self.dynamic_frame, text="Capacidad:", bg="white").pack(anchor="w")
+
+        self.entry_capacidad = tk.Entry(self.dynamic_frame)
+        self.entry_capacidad.pack(fill="x", pady=5)
+
+        tk.Label(self.dynamic_frame, text="Horas:", bg="white").pack(anchor="w")
+
+        self.entry_horas = tk.Entry(self.dynamic_frame)
+        self.entry_horas.pack(fill="x", pady=5)
+
+        tk.Label(self.dynamic_frame, text="Precio por hora:", bg="white").pack(anchor="w")
+
+        self.entry_precio = tk.Entry(self.dynamic_frame)
+        self.entry_precio.pack(fill="x", pady=5)
 
     def form_equipo(self):
+
         tk.Label(self.dynamic_frame, text="Tipo de Equipo:", bg="white").pack(anchor="w")
-        ttk.Combobox(self.dynamic_frame, values=["Impresora", "Laptops"], state="readonly").pack(fill="x", pady=5)
-        
-        tk.Label(self.dynamic_frame, text="Precio por dia:", bg="white").pack(anchor="w", pady=(10,0))
-        tk.Entry(self.dynamic_frame).pack(fill="x", pady=5)
+
+        self.combo_equipo = ttk.Combobox(
+            self.dynamic_frame,
+            values=["Impresora", "Laptop"],
+            state="readonly"
+        )
+        self.combo_equipo.pack(fill="x", pady=5)
+
+        tk.Label(self.dynamic_frame, text="Cantidad de días:", bg="white").pack(anchor="w")
+
+        self.entry_dias = tk.Entry(self.dynamic_frame)
+        self.entry_dias.pack(fill="x", pady=5)
+
+        tk.Label(self.dynamic_frame, text="Precio por día:", bg="white").pack(anchor="w")
+
+        self.entry_precio = tk.Entry(self.dynamic_frame)
+        self.entry_precio.pack(fill="x", pady=5)
 
     def form_asesoria(self):
+
         tk.Label(self.dynamic_frame, text="Especialidad:", bg="white").pack(anchor="w")
-        ttk.Combobox(self.dynamic_frame, values=["Programacion", "Redes", "Diseño"], state="readonly").pack(fill="x", pady=5)
-        
-        tk.Label(self.dynamic_frame, text="Precio hora:", bg="white").pack(anchor="w", pady=(10,0))
-        tk.Entry(self.dynamic_frame).pack(fill="x", pady=5)
+
+        self.combo_especialidad = ttk.Combobox(
+            self.dynamic_frame,
+            values=["Programación", "Redes", "Diseño"],
+            state="readonly"
+        )
+        self.combo_especialidad.pack(fill="x", pady=5)
+
+        tk.Label(self.dynamic_frame, text="Horas:", bg="white").pack(anchor="w")
+
+        self.entry_horas = tk.Entry(self.dynamic_frame)
+        self.entry_horas.pack(fill="x", pady=5)
+
+        tk.Label(self.dynamic_frame, text="Precio por hora:", bg="white").pack(anchor="w")
+
+        self.entry_precio = tk.Entry(self.dynamic_frame)
+        self.entry_precio.pack(fill="x", pady=5)
+
+    def guardar_servicio(self):
+
+        try:
+
+            tipo = self.combo_tipo.get().lower()
+
+            datos = {}
+
+            if tipo == "sala":
+
+                datos = {
+                    "capacidad": int(self.entry_capacidad.get()),
+                    "horas": int(self.entry_horas.get()),
+                    "precio": float(self.entry_precio.get())
+                }
+
+            elif tipo == "equipo":
+
+                datos = {
+                    "tipo_equipo": self.combo_equipo.get(),
+                    "dias": int(self.entry_dias.get()),
+                    "precio": float(self.entry_precio.get())
+                }
+
+            elif tipo == "asesoria":
+
+                datos = {
+                    "especialidad": self.combo_especialidad.get(),
+                    "horas": int(self.entry_horas.get()),
+                    "precio": float(self.entry_precio.get())
+                }
+
+            exito, mensaje = self.controller.registrar_servicio(
+                tipo,
+                datos
+            )
+
+            if exito:
+
+                messagebox.showinfo("Éxito", mensaje)
+
+                self.parent_panel.cargar_servicios()
+
+                self.destroy()
+
+            else:
+
+                messagebox.showerror("Error", mensaje)
+
+        except Exception as e:
+
+            messagebox.showerror("Error", str(e))

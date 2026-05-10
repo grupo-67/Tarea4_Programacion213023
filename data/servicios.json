@@ -1,0 +1,20 @@
+[
+    {
+        "tipo": "sala",
+        "capacidad": 50,
+        "horas": 10,
+        "precio": 5.0
+    },
+    {
+        "tipo": "equipo",
+        "tipo_equipo": "Impresora",
+        "dias": 30,
+        "precio": 10.0
+    },
+    {
+        "tipo": "asesoria",
+        "especialidad": "Redes",
+        "horas": 10,
+        "precio": 5.0
+    }
+]

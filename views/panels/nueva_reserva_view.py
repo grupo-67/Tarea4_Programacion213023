@@ -1,10 +1,18 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
+from tkcalendar import DateEntry
 import ctypes
 
 class NuevaReservaView(tk.Toplevel):
-    def __init__(self, parent):
+    def __init__(self, parent, controller):
         super().__init__(parent)
+        self.parent_panel = parent
+        self.controller = controller
+        try:
+            ctypes.windll.shcore.SetProcessDpiAwareness(1)
+        except:
+            pass
         self.title("Crear una nueva reserva")
         self.geometry("500x450")
         self.configure(bg="white")
@@ -15,6 +23,8 @@ class NuevaReservaView(tk.Toplevel):
         self.transient(parent)
         self.grab_set()
         self.crear_ui()
+        self.cargar_datos()
+        self.guardar_datos()
 
     def crear_ui(self):
         container = tk.Frame(self, bg="white", padx=30, pady=20)
@@ -29,24 +39,81 @@ class NuevaReservaView(tk.Toplevel):
 
         # Fila 1: Cliente y Servicio
         tk.Label(container, text="Cliente:", bg="white").grid(row=1, column=0, sticky="w")
-        ttk.Combobox(container, state="readonly").grid(row=2, column=0, sticky="ew", padx=(0, 10), pady=(5, 15))
+        self.combo_cliente = ttk.Combobox(
+            container,
+            state="readonly"
+            )
+        self.combo_cliente.grid(
+            row=2,
+            column=0,
+            sticky="ew",
+            padx=(0, 10),
+            pady=(5, 15)
+        )
 
-        tk.Label(container, text="Servicio:", bg="white").grid(row=1, column=1, sticky="w")
-        ttk.Combobox(container, state="readonly").grid(row=2, column=1, sticky="ew", pady=(5, 15))
+        #servicio
+        self.combo_servicio = ttk.Combobox(
+            container,
+            state="readonly"
+        )
+        self.combo_servicio.grid(
+            row=2,
+            column=1,
+            sticky="ew",
+            pady=(5, 15)
+        )
 
         # Fila 2: Fecha y Hora de inicio
         tk.Label(container, text="Fecha:", bg="white").grid(row=3, column=0, sticky="w")
-        tk.Entry(container, highlightthickness=1, highlightbackground="#CCC", relief="flat").grid(row=4, column=0, sticky="ew", padx=(0, 10), pady=(5, 15), ipady=3)
+        self.date_fecha = DateEntry(
+            container,
+            date_pattern="yyyy-mm-dd",
+            background="#4C6EC0",
+            foreground="white",
+            borderwidth=1
+        )
+
+        self.date_fecha.grid(
+            row=4,
+            column=0,
+            sticky="ew",
+            padx=(0, 10),
+        pady=(5, 15)
+        )
 
         tk.Label(container, text="Hora de inicio:", bg="white").grid(row=3, column=1, sticky="w")
-        tk.Entry(container, highlightthickness=1, highlightbackground="#CCC", relief="flat").grid(row=4, column=1, sticky="ew", pady=(5, 15), ipady=3)
+        self.combo_hora = ttk.Combobox(
+            container,
+            values=[
+                f"{h:02}:00"
+                for h in range(7, 23)
+            ],
+            state="readonly"
+        )
+
+        self.combo_hora.grid(
+            row=4,
+            column=1,
+            sticky="ew",
+        pady=(5, 15)
+        )
 
         # Fila 3: Duración
         tk.Label(container, text="Duracion:", bg="white").grid(row=5, column=0, sticky="w")
         duracion_frame = tk.Frame(container, bg="white")
         duracion_frame.grid(row=6, column=0, sticky="w", pady=(5, 15))
         
-        tk.Entry(duracion_frame, width=10, highlightthickness=1, highlightbackground="#CCC", relief="flat").pack(side="left", ipady=3)
+        self.entry_duracion = tk.Entry(
+            duracion_frame,
+            width=10,
+            highlightthickness=1,
+            highlightbackground="#CCC",
+            relief="flat"
+        )
+        self.entry_duracion.pack(
+            side="left",
+            ipady=3
+        )
         ttk.Combobox(duracion_frame, values=["Horas", "Días"], width=8, state="readonly").pack(side="left", padx=5)
 
         # Fila 4: Botones Finales
@@ -55,6 +122,78 @@ class NuevaReservaView(tk.Toplevel):
                                  command=self.destroy)
         btn_cancelar.grid(row=7, column=0, sticky="w", pady=20)
 
-        btn_confirmar = tk.Button(container, text="Confirmar reserva", bg="#4CB5FF", fg="white",
-                                  relief="flat", font=("Segoe UI", 10, "bold"), padx=20)
+        btn_confirmar = tk.Button(
+            container,
+            text="Confirmar reserva",
+            bg="#4CB5FF",
+            fg="white",
+            relief="flat",
+            font=("Segoe UI", 10, "bold"),
+            padx=20,
+            command=self.guardar_reserva
+        )
         btn_confirmar.grid(row=7, column=1, sticky="e", pady=20)
+
+    def cargar_datos(self):
+
+        clientes = self.controller.cliente_controller.listar_clientes()
+        servicios = self.controller.servicio_controller.listar_servicios()
+
+        self.clientes = clientes
+        self.servicios = servicios
+
+        self.combo_cliente["values"] = [
+            cliente.email
+            for cliente in clientes
+        ]
+
+        self.combo_servicio["values"] = [
+            f"{i} - {servicio.nombre}"
+            for i, servicio in enumerate(servicios)
+        ]
+    
+    def guardar_reserva(self):
+
+        try:
+            email_cliente = self.combo_cliente.get()
+            servicio_texto = self.combo_servicio.get()
+
+            if not servicio_texto:
+                raise Exception(
+                    "Seleccione un servicio"
+                )
+
+            indice_servicio = int(
+                servicio_texto.split(" - ")[0]
+            )
+
+            duracion = int(
+                self.entry_duracion.get()
+            )
+
+            exito, mensaje = self.controller.crear_reserva(
+                email_cliente,
+                indice_servicio,
+                duracion
+            )
+
+            if exito:
+                messagebox.showinfo(
+                    "Éxito",
+                    mensaje
+                )
+
+                self.parent_panel.cargar_reservas()
+                self.destroy()
+
+            else:
+                messagebox.showerror(
+                    "Error",
+                    mensaje
+                )
+
+        except Exception as e:
+            messagebox.showerror(
+                "Error",
+                str(e)
+            )

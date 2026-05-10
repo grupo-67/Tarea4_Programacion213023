@@ -1,0 +1,3 @@
+[2026-05-09 16:47:38.350925] Entidad.__init__() missing 2 required positional arguments: 'id' and 'fecha_creacion'
+[2026-05-09 16:47:47.357676] Entidad.__init__() missing 2 required positional arguments: 'id' and 'fecha_creacion'
+[2026-05-09 16:48:21.093470] Entidad.__init__() missing 2 required positional arguments: 'id' and 'fecha_creacion'

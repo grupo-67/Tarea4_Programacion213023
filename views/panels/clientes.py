@@ -1,12 +1,17 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+from tkinter import messagebox
+from controllers.cliente_controller import ClienteController
 
 class ClientesPanel(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, bg="white")
         self.iconos = {}
+        self.controller = ClienteController()
         self.crear_ui()
+        self.cargar_clientes()
+        
 
     def _cargar_icono(self, nombre_archivo, size=(18, 18)):
         # CAMBIO: Ajustamos a la ruta correcta 'img/iconos/'
@@ -40,8 +45,15 @@ class ClientesPanel(tk.Frame):
             self.entries[var_name] = ent
 
         btn_add = tk.Button(
-            form_frame, text=" Agregar", bg="#5CFF5C", fg="black", 
-            font=("Segoe UI", 10, "bold"), relief="flat", padx=20, cursor="hand2"
+            form_frame,
+            text=" Agregar",
+            bg="#5CFF5C",
+            fg="black",
+            font=("Segoe UI", 10, "bold"),
+            relief="flat",
+            padx=20,
+            cursor="hand2",
+            command=self.agregar_cliente
         )
         btn_add.grid(row=3, column=0, columnspan=2, sticky="w", pady=(10, 0), ipady=3)
 
@@ -88,3 +100,65 @@ class ClientesPanel(tk.Frame):
         )
         # MOVIDO ipady=5 al pack()
         btn_details.pack(side="left", ipady=5)
+
+    # =====================================================
+    # AGREGAR CLIENTE
+    # =====================================================
+
+    def agregar_cliente(self):
+
+        nombre = self.entries["entry_nombre"].get()
+        telefono = self.entries["entry_tel"].get()
+        email = self.entries["entry_mail"].get()
+
+        exito, mensaje = self.controller.registrar_cliente(
+            nombre,
+            email,
+            telefono
+        )
+
+        if exito:
+
+            messagebox.showinfo("Éxito", mensaje)
+
+            self.limpiar_campos()
+
+            self.cargar_clientes()
+
+        else:
+
+            messagebox.showerror("Error", mensaje)
+
+    # =====================================================
+    # CARGAR CLIENTES
+    # =====================================================
+
+    def cargar_clientes(self):
+
+        # LIMPIAR TABLA
+        for item in self.tabla.get_children():
+            self.tabla.delete(item)
+
+        clientes = self.controller.listar_clientes()
+
+        for i, cliente in enumerate(clientes, start=1):
+
+            self.tabla.insert(
+                "",
+                "end",
+                values=(
+                    i,
+                    cliente.nombre,
+                    cliente.telefono,
+                    cliente.email
+                )
+            )
+
+    # =====================================================
+    # LIMPIAR CAMPOS
+    # =====================================================
+
+    def limpiar_campos(self):
+
+        for entry in self.entries.values():
+            entry.delete(0, tk.END)

@@ -1,11 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
+from controllers.servicio_controller import ServicioController
 from views.panels.nuevo_servicio_view import NuevoServicioView
 
 class ServiciosPanel(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, bg="white")
+        self.controller = ServicioController()
         self.crear_ui()
+        self.cargar_servicios()
 
     def crear_ui(self):
         tk.Label(self, text="Servicios", font=("Segoe UI", 22, "bold"), 
@@ -38,4 +41,26 @@ class ServiciosPanel(tk.Frame):
 
     def abrir_formulario_nuevo(self):
         # Lanzamos la ventana secundaria
-        NuevoServicioView(self)
+        NuevoServicioView(self, self.controller)
+
+    def cargar_servicios(self):
+
+        for item in self.tabla.get_children():
+            self.tabla.delete(item)
+
+        servicios = self.controller.listar_servicios()
+
+        for i, servicio in enumerate(servicios, start=1):
+
+            tipo = servicio.__class__.__name__.replace("Servicio", "")
+
+            self.tabla.insert(
+                "",
+                "end",
+                values=(
+                    i,
+                    tipo,
+                    servicio.nombre,
+                    servicio.calcular_costo()
+                )
+            )

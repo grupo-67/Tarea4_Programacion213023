@@ -50,11 +50,7 @@ class JsonUtils:
 
         for cliente in clientes:
 
-            datos.append({
-                "nombre": cliente._nombre,
-                "email": cliente._email,
-                "telefono": cliente._telefono
-            })
+            datos.append(cliente.to_dict())
 
         with open(JsonUtils.CLIENTES_PATH, "w") as f:
 
@@ -79,6 +75,9 @@ class JsonUtils:
                 item["telefono"]
             )
 
+            cliente.id = item.get("id")
+            cliente.fecha_creacion = item.get("fecha_creacion")
+
             clientes.append(cliente)
 
         return clientes
@@ -100,7 +99,7 @@ class JsonUtils:
                     "tipo": "asesoria",
                     "especialidad": servicio.especialidad,
                     "horas": servicio.horas,
-                    "precio": servicio._precio_base
+                    "precio": servicio.precio_base
                 })
 
             elif isinstance(servicio, ServicioSala):
@@ -109,16 +108,16 @@ class JsonUtils:
                     "tipo": "sala",
                     "capacidad": servicio.capacidad,
                     "horas": servicio.horas,
-                    "precio": servicio._precio_base
+                    "precio": servicio.precio_base
                 })
 
             elif isinstance(servicio, ServicioEquipo):
 
                 datos.append({
                     "tipo": "equipo",
-                    "tipo_equipo": servicio.tipo,
+                    "tipo_equipo": servicio.tipo_equipo,
                     "dias": servicio.dias,
-                    "precio": servicio._precio_base
+                    "precio": servicio.precio_base
                 })
 
         with open(JsonUtils.SERVICIOS_PATH, "w") as f:
@@ -178,7 +177,7 @@ class JsonUtils:
         for reserva in reservas:
 
             datos.append({
-                "cliente": reserva.cliente._email,
+                "cliente": reserva.cliente._nombre,
                 "servicio": reserva.servicio._nombre,
                 "duracion": reserva.duracion,
                 "estado": reserva.estado

@@ -9,5 +9,5 @@ class Entidad(ABC):
 
     #metodo abstacto de la clase
     @abstractmethod
-    def mostrar_informacion():
+    def mostrar_informacion(self):
         pass

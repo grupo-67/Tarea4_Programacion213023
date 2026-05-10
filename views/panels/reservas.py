@@ -1,11 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 from views.panels.nueva_reserva_view import NuevaReservaView
+from controllers.reserva_controller import ReservaController
 
 class ReservasPanel(tk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent,reserva_controller):
         super().__init__(parent, bg="white")
+        self.controller = reserva_controller
         self.crear_ui()
+        self.cargar_reservas()
 
     def crear_ui(self):
         # Título
@@ -58,4 +61,25 @@ class ReservasPanel(tk.Frame):
         btn_nueva.pack(anchor="w", padx=30, pady=20)
 
     def abrir_nueva_reserva(self):
-        NuevaReservaView(self)
+        NuevaReservaView(self, self.controller)
+
+    def cargar_reservas(self):
+
+        for item in self.tabla.get_children():
+            self.tabla.delete(item)
+
+        reservas = self.controller.listar_reservas()
+
+        for i, reserva in enumerate(reservas, start=1):
+
+            self.tabla.insert(
+                "",
+                "end",
+                values=(
+                    i,
+                    reserva.cliente.nombre,
+                    reserva.servicio.nombre,
+                    reserva.duracion,
+                    reserva.estado
+                )
+            )
