@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from views.panels.nueva_reserva_view import NuevaReservaView
 from controllers.reserva_controller import ReservaController
 
@@ -60,18 +61,52 @@ class ReservasPanel(tk.Frame):
                               command=self.abrir_nueva_reserva)
         btn_nueva.pack(anchor="w", padx=30, pady=20)
 
+        self.tabla.bind("<<TreeviewSelect>>", self.on_reserva_seleccionada)
+
+    def on_reserva_seleccionada(self, event):
+        seleccion = self.tabla.selection()
+        if not seleccion: return
+        
+        indice = self.tabla.index(seleccion[0])
+        reserva = self.controller.listar_reservas()[indice]
+        
+        # Actualizar panel derecho
+        self.txt_detalles.config(text=reserva.mostrar_informacion(), fg="#333")
+
+    def confirmar_seleccionada(self):
+        seleccion = self.tabla.selection()
+        if not seleccion: return
+        
+        indice = self.tabla.index(seleccion[0])
+        exito, msj = self.controller.confirmar_reserva(indice)
+        if exito:
+            messagebox.showinfo("Éxito", msj)
+            self.cargar_reservas()
+        else:
+            messagebox.showerror("Error", msj)
+
+    def cancelar_seleccionada(self):
+        seleccion = self.tabla.selection()
+        if not seleccion: return
+        
+        indice = self.tabla.index(seleccion[0])
+        exito, msj = self.controller.cancelar_reserva(indice)
+        if exito:
+            messagebox.showinfo("Cancelada", msj)
+            self.cargar_reservas()
+        else:
+            messagebox.showerror("Error", msj)
+
     def abrir_nueva_reserva(self):
         NuevaReservaView(self, self.controller)
 
     def cargar_reservas(self):
-
         for item in self.tabla.get_children():
             self.tabla.delete(item)
 
         reservas = self.controller.listar_reservas()
 
         for i, reserva in enumerate(reservas, start=1):
-
             self.tabla.insert(
                 "",
                 "end",

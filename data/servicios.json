@@ -1,20 +1,50 @@
 [
     {
         "tipo": "sala",
-        "capacidad": 50,
-        "horas": 10,
+        "nombre": "Sala de Juntas",
+        "capacidad": 20,
+        "precio": 2.0
+    },
+    {
+        "tipo": "sala",
+        "nombre": "Sala Audiovisual",
+        "capacidad": 35,
         "precio": 5.0
     },
     {
-        "tipo": "equipo",
-        "tipo_equipo": "Impresora",
-        "dias": 30,
-        "precio": 10.0
+        "tipo": "sala",
+        "nombre": "Biblioteca Virtual",
+        "capacidad": 50,
+        "precio": 1.0
+    },
+    {
+        "tipo": "asesoria",
+        "especialidad": "Programaci\u00f3n",
+        "precio": 15.0
     },
     {
         "tipo": "asesoria",
         "especialidad": "Redes",
-        "horas": 10,
+        "precio": 12.0
+    },
+    {
+        "tipo": "asesoria",
+        "especialidad": "Ciberseguridad",
+        "precio": 20.0
+    },
+    {
+        "tipo": "equipo",
+        "nombre": "Impresora",
+        "precio": 2.0
+    },
+    {
+        "tipo": "equipo",
+        "nombre": "Laptop",
         "precio": 5.0
+    },
+    {
+        "tipo": "equipo",
+        "nombre": "Proyector",
+        "precio": 3.0
     }
 ]

@@ -1,7 +1,7 @@
 from models.cliente import Cliente
 from utils.json_utils import JsonUtils
 from utils.logger import Logger
-
+import re
 
 class ClienteController:
 
@@ -25,6 +25,18 @@ class ClienteController:
             if not nombre or not email or not telefono:
                 raise Exception("Todos los campos son obligatorios")
 
+            # Validar formato de Email
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                raise Exception("El formato de correo electrónico no es válido")
+            
+            # Validar formato de Teléfono (solo números, min 7 dígitos)
+            if not telefono.isdigit() or len(telefono) < 7:
+                raise Exception("El teléfono debe contener solo números y al menos 7 dígitos")
+            
+            # Validar duplicados por EMAIL (es más seguro que por nombre)
+            if any(c.email == email for c in self.clientes):
+                raise Exception("Ya existe un cliente registrado con este correo")
+            
             # VALIDAR DUPLICADOS
             cliente_existente = self.buscar_cliente(email)
 
@@ -32,9 +44,7 @@ class ClienteController:
                 raise Exception("El cliente ya existe")
 
             cliente = Cliente(nombre, email, telefono)
-
             self.clientes.append(cliente)
-
             JsonUtils.guardar_clientes(self.clientes)
 
             return True, "Cliente registrado correctamente"
@@ -49,11 +59,11 @@ class ClienteController:
     # BUSCAR CLIENTE
     # =====================================================
 
-    def buscar_cliente(self, email):
+    def buscar_cliente(self, nombre):
 
         for cliente in self.clientes:
 
-            if cliente.email == email:
+            if cliente.nombre == nombre:
                 return cliente
 
         return None

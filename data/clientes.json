@@ -2,8 +2,36 @@
     {
         "id": "f0661e60",
         "fecha_creacion": "2026-05-09 16:54:39",
-        "nombre": "johan",
+        "nombre": "Johan",
         "email": "johan@gmail.com",
-        "telefono": "1233"
+        "telefono": "3043251200"
+    },
+    {
+        "id": "f3ad3fe3",
+        "fecha_creacion": "2026-05-11 20:21:28",
+        "nombre": "Millis",
+        "email": "millisacosta@gmail.com",
+        "telefono": "3021112233"
+    },
+    {
+        "id": "8ae3f3ba",
+        "fecha_creacion": "2026-05-11 20:22:47",
+        "nombre": "Santiago",
+        "email": "santiago@hotmail.com",
+        "telefono": "3009998811"
+    },
+    {
+        "id": "b632cf0a",
+        "fecha_creacion": "2026-05-11 20:23:13",
+        "nombre": "Andres",
+        "email": "andres@gmail.com",
+        "telefono": "3114001020"
+    },
+    {
+        "id": "813f3f86",
+        "fecha_creacion": "2026-05-11 20:23:37",
+        "nombre": "Mauricio",
+        "email": "mauricio@gmail.com",
+        "telefono": "3208884050"
     }
 ]

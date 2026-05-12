@@ -28,32 +28,34 @@ class ServicioController:
 
                 servicio = ServicioAsesoria(
                     datos["especialidad"],
-                    datos["horas"],
                     datos["precio"]
                 )
 
             elif tipo == "sala":
 
                 servicio = ServicioSala(
+                    datos["nombre"],
                     datos["capacidad"],
-                    datos["horas"],
                     datos["precio"]
                 )
 
             elif tipo == "equipo":
 
                 servicio = ServicioEquipo(
-                    datos["tipo_equipo"],
-                    datos["dias"],
+                    datos["nombre"],
                     datos["precio"]
                 )
 
             else:
-                raise Exception("Tipo de servicio inválido")
+                raise Exception(
+                    "Tipo de servicio inválido"
+                )
 
             self.servicios.append(servicio)
 
-            JsonUtils.guardar_servicios(self.servicios)
+            JsonUtils.guardar_servicios(
+                self.servicios
+            )
 
             return True, "Servicio registrado correctamente"
 

@@ -93,30 +93,28 @@ class JsonUtils:
 
         for servicio in servicios:
 
-            if isinstance(servicio, ServicioAsesoria):
+            if servicio.tipo == "asesoria":
 
                 datos.append({
                     "tipo": "asesoria",
-                    "especialidad": servicio.especialidad,
-                    "horas": servicio.horas,
+                    "especialidad": servicio._nombre,
                     "precio": servicio.precio_base
                 })
 
-            elif isinstance(servicio, ServicioSala):
+            elif servicio.tipo == "sala":
 
                 datos.append({
                     "tipo": "sala",
+                    "nombre": servicio._nombre,
                     "capacidad": servicio.capacidad,
-                    "horas": servicio.horas,
                     "precio": servicio.precio_base
                 })
 
-            elif isinstance(servicio, ServicioEquipo):
+            elif servicio.tipo == "equipo":
 
                 datos.append({
                     "tipo": "equipo",
-                    "tipo_equipo": servicio.tipo_equipo,
-                    "dias": servicio.dias,
+                    "nombre": servicio._nombre,
                     "precio": servicio.precio_base
                 })
 
@@ -141,23 +139,21 @@ class JsonUtils:
 
                 servicio = ServicioAsesoria(
                     item["especialidad"],
-                    item["horas"],
                     item["precio"]
                 )
 
             elif item["tipo"] == "sala":
 
                 servicio = ServicioSala(
+                    item["nombre"],
                     item["capacidad"],
-                    item["horas"],
                     item["precio"]
                 )
 
             elif item["tipo"] == "equipo":
 
                 servicio = ServicioEquipo(
-                    item["tipo_equipo"],
-                    item["dias"],
+                    item["nombre"],
                     item["precio"]
                 )
 

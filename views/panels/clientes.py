@@ -72,9 +72,9 @@ class ClientesPanel(tk.Frame):
         self.tabla.heading("email", text="E-mail")
 
         self.tabla.column("id", width=50, anchor="center")
-        self.tabla.column("nombre", width=200)
-        self.tabla.column("telefono", width=120)
-        self.tabla.column("email", width=180)
+        self.tabla.column("nombre", width=200, anchor="center")
+        self.tabla.column("telefono", width=120, anchor="center")
+        self.tabla.column("email", width=180, anchor="center")
 
         self.tabla.pack(fill="both", expand=True)
 
@@ -96,7 +96,8 @@ class ClientesPanel(tk.Frame):
             highlightbackground="#CCC",
             font=("Segoe UI", 9), 
             padx=15, 
-            cursor="hand2"
+            cursor="hand2",
+            command=self.ver_detalles_cliente
         )
         # MOVIDO ipady=5 al pack()
         btn_details.pack(side="left", ipady=5)
@@ -153,6 +154,22 @@ class ClientesPanel(tk.Frame):
                     cliente.email
                 )
             )
+
+    def ver_detalles_cliente(self):
+        # Obtener item seleccionado
+        seleccion = self.tabla.selection()
+        if not seleccion:
+            messagebox.showwarning("Atención", "Por favor, seleccione un cliente de la tabla")
+            return
+
+        # Obtener el índice de la lista del controlador
+        # Como usamos el ID visual (1, 2, 3...), restamos 1 para el índice del array
+        item_index = self.tabla.index(seleccion[0])
+        cliente = self.controller.listar_clientes()[item_index]
+
+        # Hacer uso de la función del modelo
+        info = cliente.mostrar_informacion()
+        messagebox.showinfo("Información del Cliente", info)
 
     # =====================================================
     # LIMPIAR CAMPOS

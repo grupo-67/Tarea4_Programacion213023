@@ -70,61 +70,102 @@ class NuevoServicioView(tk.Toplevel):
 
     def form_sala(self):
 
-        tk.Label(self.dynamic_frame, text="Capacidad:", bg="white").pack(anchor="w")
+        tk.Label(
+            self.dynamic_frame,
+            text="Tipo de Sala:",
+            bg="white"
+        ).pack(anchor="w")
+
+        self.combo_sala = ttk.Combobox(
+            self.dynamic_frame,
+            values=[
+                "Sala de Juntas",
+                "Sala Audiovisual",
+                "Biblioteca Virtual"
+            ],
+            state="readonly"
+        )
+
+        self.combo_sala.pack(fill="x", pady=5)
+
+        tk.Label(
+            self.dynamic_frame,
+            text="Capacidad:",
+            bg="white"
+        ).pack(anchor="w")
 
         self.entry_capacidad = tk.Entry(self.dynamic_frame)
+
         self.entry_capacidad.pack(fill="x", pady=5)
 
-        tk.Label(self.dynamic_frame, text="Horas:", bg="white").pack(anchor="w")
-
-        self.entry_horas = tk.Entry(self.dynamic_frame)
-        self.entry_horas.pack(fill="x", pady=5)
-
-        tk.Label(self.dynamic_frame, text="Precio por hora:", bg="white").pack(anchor="w")
+        tk.Label(
+            self.dynamic_frame,
+            text="Precio por hora:",
+            bg="white"
+        ).pack(anchor="w")
 
         self.entry_precio = tk.Entry(self.dynamic_frame)
+
         self.entry_precio.pack(fill="x", pady=5)
 
     def form_equipo(self):
 
-        tk.Label(self.dynamic_frame, text="Tipo de Equipo:", bg="white").pack(anchor="w")
+        tk.Label(
+            self.dynamic_frame,
+            text="Tipo de Equipo:",
+            bg="white"
+        ).pack(anchor="w")
 
         self.combo_equipo = ttk.Combobox(
             self.dynamic_frame,
-            values=["Impresora", "Laptop"],
+            values=[
+                "Impresora",
+                "Laptop",
+                "Proyector"
+            ],
             state="readonly"
         )
+
         self.combo_equipo.pack(fill="x", pady=5)
 
-        tk.Label(self.dynamic_frame, text="Cantidad de días:", bg="white").pack(anchor="w")
-
-        self.entry_dias = tk.Entry(self.dynamic_frame)
-        self.entry_dias.pack(fill="x", pady=5)
-
-        tk.Label(self.dynamic_frame, text="Precio por día:", bg="white").pack(anchor="w")
+        tk.Label(
+            self.dynamic_frame,
+            text="Precio por día:",
+            bg="white"
+        ).pack(anchor="w")
 
         self.entry_precio = tk.Entry(self.dynamic_frame)
+
         self.entry_precio.pack(fill="x", pady=5)
 
     def form_asesoria(self):
 
-        tk.Label(self.dynamic_frame, text="Especialidad:", bg="white").pack(anchor="w")
+        tk.Label(
+            self.dynamic_frame,
+            text="Especialidad:",
+            bg="white"
+        ).pack(anchor="w")
 
         self.combo_especialidad = ttk.Combobox(
             self.dynamic_frame,
-            values=["Programación", "Redes", "Diseño"],
+            values=[
+                "Programación",
+                "Redes",
+                "Ciberseguridad"
+            ],
             state="readonly"
         )
+
         self.combo_especialidad.pack(fill="x", pady=5)
 
-        tk.Label(self.dynamic_frame, text="Horas:", bg="white").pack(anchor="w")
-
-        self.entry_horas = tk.Entry(self.dynamic_frame)
-        self.entry_horas.pack(fill="x", pady=5)
-
-        tk.Label(self.dynamic_frame, text="Precio por hora:", bg="white").pack(anchor="w")
+        tk.Label(
+            self.dynamic_frame,
+            text="Precio por hora:",
+            bg="white"
+        ).pack(anchor="w")
 
         self.entry_precio = tk.Entry(self.dynamic_frame)
+
         self.entry_precio.pack(fill="x", pady=5)
 
     def guardar_servicio(self):
@@ -138,26 +179,32 @@ class NuevoServicioView(tk.Toplevel):
             if tipo == "sala":
 
                 datos = {
-                    "capacidad": int(self.entry_capacidad.get()),
-                    "horas": int(self.entry_horas.get()),
-                    "precio": float(self.entry_precio.get())
+                    "nombre": self.combo_sala.get(),
+                    "capacidad": int(
+                        self.entry_capacidad.get()
+                    ),
+                    "precio": float(
+                        self.entry_precio.get()
+                    )
                 }
 
             elif tipo == "equipo":
 
                 datos = {
-                    "tipo_equipo": self.combo_equipo.get(),
-                    "dias": int(self.entry_dias.get()),
-                    "precio": float(self.entry_precio.get())
-                }
+                    "nombre": self.combo_equipo.get(),
+                    "precio": float(
+                        self.entry_precio.get()
+                    )
+            }
 
             elif tipo == "asesoria":
 
                 datos = {
                     "especialidad": self.combo_especialidad.get(),
-                    "horas": int(self.entry_horas.get()),
-                    "precio": float(self.entry_precio.get())
-                }
+                    "precio": float(
+                        self.entry_precio.get()
+                    )
+            }
 
             exito, mensaje = self.controller.registrar_servicio(
                 tipo,
@@ -166,7 +213,10 @@ class NuevoServicioView(tk.Toplevel):
 
             if exito:
 
-                messagebox.showinfo("Éxito", mensaje)
+                messagebox.showinfo(
+                    "Éxito",
+                    mensaje
+                )
 
                 self.parent_panel.cargar_servicios()
 
@@ -174,8 +224,14 @@ class NuevoServicioView(tk.Toplevel):
 
             else:
 
-                messagebox.showerror("Error", mensaje)
+                messagebox.showerror(
+                    "Error",
+                    mensaje
+                )
 
         except Exception as e:
 
-            messagebox.showerror("Error", str(e))
+            messagebox.showerror(
+                "Error",
+                str(e)
+            )

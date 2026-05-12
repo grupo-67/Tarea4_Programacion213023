@@ -40,7 +40,7 @@ class Cliente(Entidad):
 
     def mostrar_informacion(self):
 
-        return f"{self._nombre} - {self._email}"
+        return f"Cliente: {self._nombre}\nTeléfono: {self.telefono}\nEmail: {self._email}\nCreado: {self.fecha_creacion}"
 
     # ==========================================
     # CONVERTIR A DICCIONARIO

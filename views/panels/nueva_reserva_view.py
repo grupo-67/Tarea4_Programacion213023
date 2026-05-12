@@ -24,7 +24,6 @@ class NuevaReservaView(tk.Toplevel):
         self.grab_set()
         self.crear_ui()
         self.cargar_datos()
-        self.guardar_datos()
 
     def crear_ui(self):
         container = tk.Frame(self, bg="white", padx=30, pady=20)
@@ -52,19 +51,53 @@ class NuevaReservaView(tk.Toplevel):
         )
 
         #servicio
-        self.combo_servicio = ttk.Combobox(
+        # Tipo de servicio
+        tk.Label(container, text="Tipo de Servicio:", bg="white").grid(
+            row=1,
+            column=1,
+            sticky="w"
+        )
+
+        self.combo_tipo = ttk.Combobox(
             container,
+            values=["Sala", "Equipo", "Asesoria"],
             state="readonly"
         )
-        self.combo_servicio.grid(
+
+        self.combo_tipo.grid(
             row=2,
             column=1,
             sticky="ew",
             pady=(5, 15)
         )
 
+        self.combo_tipo.bind(
+            "<<ComboboxSelected>>",
+            self.actualizar_servicios
+        )
+
+        # Servicio específico
+        tk.Label(container, text="Servicio:", bg="white").grid(
+            row=3,
+        column=0,
+        sticky="w"
+        )
+
+        self.combo_servicio = ttk.Combobox(
+            container,
+            state="readonly"
+        )
+
+        self.combo_servicio.grid(
+            row=4,
+            column=0,
+            sticky="ew",
+            padx=(0, 10),
+            pady=(5, 15)
+        )
+
         # Fila 2: Fecha y Hora de inicio
-        tk.Label(container, text="Fecha:", bg="white").grid(row=3, column=0, sticky="w")
+        tk.Label(container, text="Fecha:", bg="white").grid(row=5, column=0, sticky="w")
         self.date_fecha = DateEntry(
             container,
             date_pattern="yyyy-mm-dd",
@@ -74,14 +107,14 @@ class NuevaReservaView(tk.Toplevel):
         )
 
         self.date_fecha.grid(
-            row=4,
+            row=6,
             column=0,
             sticky="ew",
             padx=(0, 10),
         pady=(5, 15)
         )
 
-        tk.Label(container, text="Hora de inicio:", bg="white").grid(row=3, column=1, sticky="w")
+        tk.Label(container, text="Hora de inicio:", bg="white").grid(row=5, column=1, sticky="w")
         self.combo_hora = ttk.Combobox(
             container,
             values=[
@@ -92,16 +125,16 @@ class NuevaReservaView(tk.Toplevel):
         )
 
         self.combo_hora.grid(
-            row=4,
+            row=6,
             column=1,
             sticky="ew",
         pady=(5, 15)
         )
 
         # Fila 3: Duración
-        tk.Label(container, text="Duracion:", bg="white").grid(row=5, column=0, sticky="w")
+        tk.Label(container, text="Duracion:", bg="white").grid(row=7, column=0, sticky="w")
         duracion_frame = tk.Frame(container, bg="white")
-        duracion_frame.grid(row=6, column=0, sticky="w", pady=(5, 15))
+        duracion_frame.grid(row=8, column=0, sticky="w", pady=(5, 15))
         
         self.entry_duracion = tk.Entry(
             duracion_frame,
@@ -120,7 +153,7 @@ class NuevaReservaView(tk.Toplevel):
         btn_cancelar = tk.Button(container, text="Cancelar", bg="white", relief="flat", 
                                  highlightthickness=1, highlightbackground="#CCC", width=15,
                                  command=self.destroy)
-        btn_cancelar.grid(row=7, column=0, sticky="w", pady=20)
+        btn_cancelar.grid(row=9, column=0, sticky="w", pady=20)
 
         btn_confirmar = tk.Button(
             container,
@@ -132,7 +165,7 @@ class NuevaReservaView(tk.Toplevel):
             padx=20,
             command=self.guardar_reserva
         )
-        btn_confirmar.grid(row=7, column=1, sticky="e", pady=20)
+        btn_confirmar.grid(row=9, column=1, sticky="e", pady=20)
 
     def cargar_datos(self):
 
@@ -143,7 +176,7 @@ class NuevaReservaView(tk.Toplevel):
         self.servicios = servicios
 
         self.combo_cliente["values"] = [
-            cliente.email
+            cliente.nombre
             for cliente in clientes
         ]
 
@@ -151,11 +184,11 @@ class NuevaReservaView(tk.Toplevel):
             f"{i} - {servicio.nombre}"
             for i, servicio in enumerate(servicios)
         ]
-    
+    """
     def guardar_reserva(self):
 
         try:
-            email_cliente = self.combo_cliente.get()
+            nombre_cliente = self.combo_cliente.get()
             servicio_texto = self.combo_servicio.get()
 
             if not servicio_texto:
@@ -172,7 +205,7 @@ class NuevaReservaView(tk.Toplevel):
             )
 
             exito, mensaje = self.controller.crear_reserva(
-                email_cliente,
+                nombre_cliente,
                 indice_servicio,
                 duracion
             )
@@ -197,3 +230,49 @@ class NuevaReservaView(tk.Toplevel):
                 "Error",
                 str(e)
             )
+    """
+    def guardar_reserva(self):
+        try:
+            cliente = self.combo_cliente.get()
+            servicio_raw = self.combo_servicio.get()
+            fecha = self.date_fecha.get()
+            duracion = self.entry_duracion.get()
+
+            if not cliente or not servicio_raw or not duracion:
+                raise Exception("Por favor rellene todos los campos")
+
+            indice_ser = int(servicio_raw.split(" - ")[0])
+            
+            # Llamada al controlador
+            exito, mensaje = self.controller.crear_reserva(cliente, indice_ser, duracion, fecha)
+
+            if exito:
+                messagebox.showinfo("Éxito", mensaje)
+                self.parent_panel.cargar_reservas()
+                self.destroy()
+            else:
+                messagebox.showerror("Error", mensaje)
+
+        except Exception as e:
+            messagebox.showerror("Validación", str(e))
+            
+    def actualizar_servicios(self, event=None):
+
+        tipo = self.combo_tipo.get().lower()
+
+        servicios = self.controller.servicio_controller.listar_servicios()
+
+        filtrados = []
+
+        for i, servicio in enumerate(servicios):
+
+            if servicio.tipo.lower() == tipo:
+
+                filtrados.append(
+                    f"{i} - {servicio.nombre}"
+                )
+
+        self.combo_servicio["values"] = filtrados
+
+        if filtrados:
+            self.combo_servicio.current(0)

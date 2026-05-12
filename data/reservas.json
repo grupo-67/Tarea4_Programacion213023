@@ -1,8 +1,32 @@
 [
     {
-        "cliente": "johan@gmail.com",
-        "servicio": "Equipo",
+        "cliente": "Johan",
+        "servicio": "Redes",
+        "duracion": 5,
+        "estado": "Pendiente"
+    },
+    {
+        "cliente": "Millis",
+        "servicio": "Sala de Juntas",
         "duracion": 2,
-        "estado": "Confirmada"
+        "estado": "Pendiente"
+    },
+    {
+        "cliente": "Santiago",
+        "servicio": "Impresora",
+        "duracion": 2,
+        "estado": "Pendiente"
+    },
+    {
+        "cliente": "Andres",
+        "servicio": "Laptop",
+        "duracion": 5,
+        "estado": "Pendiente"
+    },
+    {
+        "cliente": "Mauricio",
+        "servicio": "Ciberseguridad",
+        "duracion": 3,
+        "estado": "Pendiente"
     }
 ]

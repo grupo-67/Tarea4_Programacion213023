@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from controllers.servicio_controller import ServicioController
 from views.panels.nuevo_servicio_view import NuevoServicioView
 
@@ -33,7 +34,7 @@ class ServiciosPanel(tk.Frame):
 
         tk.Button(btns_frame, text="Ver Detalles", relief="flat", 
                   highlightthickness=1, highlightbackground="#CCC",
-                  padx=15, pady=5).pack(side="left", padx=5)
+                  padx=15, pady=5, command=self.ver_detalles).pack(side="left", padx=5)
 
         tk.Button(btns_frame, text="Agregar un nuevo servicio", relief="flat",
                   highlightthickness=1, highlightbackground="#CCC",
@@ -61,6 +62,21 @@ class ServiciosPanel(tk.Frame):
                     i,
                     tipo,
                     servicio.nombre,
-                    servicio.calcular_costo()
+                    servicio.precio_base
                 )
             )
+
+    def ver_detalles(self):
+        seleccion = self.tabla.selection()
+        if not seleccion:
+            messagebox.showwarning("Atención", "Seleccione un servicio de la tabla")
+            return
+
+        # Obtenemos el índice de la fila seleccionada
+        indice = self.tabla.index(seleccion[0])
+        servicio = self.controller.buscar_servicio(indice)
+
+        if servicio:
+            # Llamada al método mostrar_informacion() del modelo
+            detalle = servicio.describir_servicio()
+            messagebox.showinfo("Detalles del Servicio", detalle)

@@ -1,3 +1,30 @@
 [2026-05-09 16:47:38.350925] Entidad.__init__() missing 2 required positional arguments: 'id' and 'fecha_creacion'
 [2026-05-09 16:47:47.357676] Entidad.__init__() missing 2 required positional arguments: 'id' and 'fecha_creacion'
 [2026-05-09 16:48:21.093470] Entidad.__init__() missing 2 required positional arguments: 'id' and 'fecha_creacion'
+[2026-05-11 18:39:38.532060] Cliente no encontrado
+[2026-05-11 18:41:31.228256] Cliente no encontrado
+[2026-05-11 19:22:37.865315] property 'nombre' of 'ServicioSala' object has no setter
+[2026-05-11 19:41:36.718100] 'horas'
+[2026-05-11 19:41:39.567303] 'horas'
+[2026-05-11 19:43:11.841616] 'tipo_equipo'
+[2026-05-11 19:43:20.553653] 'horas'
+[2026-05-11 19:45:35.731376] property 'nombre' of 'ServicioSala' object has no setter
+[2026-05-11 19:45:45.141414] property 'nombre' of 'ServicioSala' object has no setter
+[2026-05-11 19:45:57.566776] 'ServicioEquipo' object has no attribute 'tipo_equipo'
+[2026-05-11 19:46:08.006757] property 'nombre' of 'ServicioAsesoria' object has no setter
+[2026-05-11 19:49:24.214270] 'ServicioSala' object has no attribute 'tipo_sala'
+[2026-05-11 19:49:58.635179] 'ServicioSala' object has no attribute 'tipo_sala'
+[2026-05-11 20:08:25.337494] 'ServicioEquipo' object has no attribute 'tipo_equipo'
+[2026-05-11 20:10:01.138221] 'ServicioEquipo' object has no attribute 'tipo_equipo'
+[2026-05-11 20:11:56.703213] 'ServicioEquipo' object has no attribute 'tipo_equipo'
+[2026-05-11 20:21:33.287470] Todos los campos son obligatorios
+[2026-05-11 20:21:40.011831] Todos los campos son obligatorios
+[2026-05-11 21:02:09.490003] Todos los campos son obligatorios
+[2026-05-11 21:02:15.331945] Todos los campos son obligatorios
+[2026-05-11 21:02:21.264586] Todos los campos son obligatorios
+[2026-05-11 21:02:26.140375] El formato de correo electrónico no es válido
+[2026-05-11 21:02:35.849004] El formato de correo electrónico no es válido
+[2026-05-11 21:02:41.924182] El formato de correo electrónico no es válido
+[2026-05-11 21:02:46.852972] El teléfono debe contener solo números y al menos 7 dígitos
+[2026-05-11 21:02:53.272129] El teléfono debe contener solo números y al menos 7 dígitos
+[2026-05-11 21:02:56.602785] El teléfono debe contener solo números y al menos 7 dígitos
