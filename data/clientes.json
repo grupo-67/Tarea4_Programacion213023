@@ -33,5 +33,19 @@
         "nombre": "Mauricio",
         "email": "mauricio@gmail.com",
         "telefono": "3208884050"
+    },
+    {
+        "id": "b021b7cc",
+        "fecha_creacion": "2026-05-12 15:56:59",
+        "nombre": "carlos",
+        "email": "carlos@gmail.com",
+        "telefono": "1112223344"
+    },
+    {
+        "id": "8a856d69",
+        "fecha_creacion": "2026-05-12 18:21:36",
+        "nombre": "Luis",
+        "email": "Luis@gmail.com",
+        "telefono": "7778881010"
     }
 ]

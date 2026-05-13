@@ -5,5 +5,3 @@ from views.layouts.main_layout import MainLayout
 # iniciando la interfaz de login del sistema.
 if __name__ == "__main__":
     app = LoginView()
-    app = MainLayout()
-    app.mainloop()

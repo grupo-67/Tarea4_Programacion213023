@@ -1,32 +1,66 @@
 [
     {
-        "cliente": "Johan",
-        "servicio": "Redes",
-        "duracion": 5,
-        "estado": "Pendiente"
+        "cliente_nombre": "Johan",
+        "servicio_nombre": "Biblioteca Virtual",
+        "duracion ": 1,
+        "fecha": "2026-05-12",
+        "estado": "Confirmada",
+        "costo": 2.0
     },
     {
-        "cliente": "Millis",
-        "servicio": "Sala de Juntas",
-        "duracion": 2,
-        "estado": "Pendiente"
+        "cliente_nombre": "Millis",
+        "servicio_nombre": "Impresora",
+        "duracion ": 1,
+        "fecha": "2026-05-12",
+        "estado": "Pendiente",
+        "costo": 0.0
     },
     {
-        "cliente": "Santiago",
-        "servicio": "Impresora",
-        "duracion": 2,
-        "estado": "Pendiente"
+        "cliente_nombre": "Santiago",
+        "servicio_nombre": "Laptop",
+        "duracion ": 1,
+        "fecha": "2026-05-15",
+        "estado": "Cancelada",
+        "costo": 0.0
     },
     {
-        "cliente": "Andres",
-        "servicio": "Laptop",
-        "duracion": 5,
-        "estado": "Pendiente"
+        "cliente_nombre": "Andres",
+        "servicio_nombre": "Redes",
+        "duracion ": 1,
+        "fecha": "2026-05-13",
+        "estado": "Pendiente",
+        "costo": 0.0
     },
     {
-        "cliente": "Mauricio",
-        "servicio": "Ciberseguridad",
-        "duracion": 3,
-        "estado": "Pendiente"
+        "cliente_nombre": "Mauricio",
+        "servicio_nombre": "Ciberseguridad",
+        "duracion ": 1,
+        "fecha": "2026-05-12",
+        "estado": "Confirmada",
+        "costo": 160.0
+    },
+    {
+        "cliente_nombre": "Millis",
+        "servicio_nombre": "Proyector",
+        "duracion ": 1,
+        "fecha": "2026-05-12",
+        "estado": "Cancelada",
+        "costo": 0.0
+    },
+    {
+        "cliente_nombre": "Santiago",
+        "servicio_nombre": "Biblioteca Virtual",
+        "duracion ": 1,
+        "fecha": "2026-05-29",
+        "estado": "Confirmada",
+        "costo": 1.0
+    },
+    {
+        "cliente_nombre": "Johan",
+        "servicio_nombre": "Impresora",
+        "duracion ": 15,
+        "fecha": "2026-05-12",
+        "estado": "Pendiente",
+        "costo": 0.0
     }
 ]

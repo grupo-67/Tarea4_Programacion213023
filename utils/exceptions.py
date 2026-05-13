@@ -1,2 +1,0 @@
-class DatosInvalidosError:
-    pass

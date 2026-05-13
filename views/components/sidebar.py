@@ -1,34 +1,36 @@
+#importamos las librerias necesarias
 import tkinter as tk
 from PIL import Image, ImageTk
 
+# Creamos la clase Sidebar que hereda de tk.Frame
 class Sidebar(tk.Frame):
+    #constructor de la clase Sidebar, recibe el padre y una función para manejar el cambio de navegación
     def __init__(self, parent, on_nav_change):
-        super().__init__(parent, bg="#4C6EC0", width=220)
+        super().__init__(parent, bg="#4C6EC0", width=220) # Establece un ancho fijo para la barra lateral
         self.pack_propagate(False)
         self.on_nav_change = on_nav_change
-        
-        # Diccionario para mantener las referencias de las imágenes (evita el Garbage Collector)
-        self.iconos = {}
-        
+        self.iconos = {} # Diccionario para mantener las referencias de las imágenes (evita el Garbage Collector)
         self.crear_widgets()
 
+    # Método privado para cargar y procesar los iconos de los botones
     def _cargar_icono(self, nombre_archivo, size=(20, 20)):
-        """Método privado para procesar las imágenes de los iconos"""
+        # Carga una imagen, la redimensiona y la convierte a un formato compatible con Tkinter.
         try:
             ruta = f"img/iconos/{nombre_archivo}.png"
             img = Image.open(ruta).convert("RGBA")
             img = img.resize(size, Image.Resampling.LANCZOS)
             return ImageTk.PhotoImage(img)
         except Exception as e:
-            print(f"Error cargando icono {nombre_archivo}: {e}")
+            print(f"Error cargando icono {nombre_archivo}: {e}") # Manejo de errores al cargar la imagen
             return None
 
+    # Método para crear los widgets de la barra lateral, incluyendo el logo y los botones de navegación
     def crear_widgets(self):
         # Logo o Texto Principal
-        tk.Label(self, text="Software", fg="white", bg="#4C6EC0", 
+        tk.Label(self, text="Software FJ", fg="white", bg="#4C6EC0", 
                  font=("Segoe UI", 20, "bold")).pack(pady=40)
 
-        # Configuración de botones: (Texto, Key, Nombre_Archivo_Imagen)
+        # Configuración de botones de navegación con sus respectivos iconos
         menu_items = [
             (" Inicio", "dashboard", "home"),
             (" Clientes", "clientes", "users"),
@@ -36,27 +38,27 @@ class Sidebar(tk.Frame):
             (" Reservas", "reservas", "calendar")
         ]
 
+        # Iteramos sobre los elementos del menú para crear los botones correspondientes
         for texto, key, icono_name in menu_items:
-            # Cargar y guardar referencia del icono
             foto = self._cargar_icono(icono_name)
             if foto:
                 self.iconos[key] = foto # Guardamos la referencia
-
+            #botón de navegación con su respectivo texto e icono, además de estilos personalizados
             btn = tk.Button(
                 self, 
                 text=texto, 
                 image=self.iconos.get(key), # Asignamos la imagen
-                compound="left",            # Imagen a la izquierda del texto
+                compound="left",            
                 bg="#4C6EC0", 
                 fg="white",
                 font=("Segoe UI", 11), 
                 relief="flat", 
                 bd=0,
-                padx=15,                    # Espaciado interno horizontal
+                padx=15,                    
                 cursor="hand2", 
                 activebackground="#1a1a3a", 
                 activeforeground="white",
-                command=lambda k=key: self.on_nav_change(k)
+                command=lambda k=key: self.on_nav_change(k) # Llama a la función de cambio de navegación con la clave correspondiente al botón
             )
             
             # Estilo de borde sutil

@@ -1,14 +1,18 @@
+#importaciones necesarias
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkcalendar import DateEntry
 import ctypes
 
+#clase nueva reserva, ventana emergente
 class NuevaReservaView(tk.Toplevel):
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, editar_reserva = None, indice_editar = None):
         super().__init__(parent)
         self.parent_panel = parent
         self.controller = controller
+        self.editar_reserva = editar_reserva
+        self.indice_editar = indice_editar
         try:
             ctypes.windll.shcore.SetProcessDpiAwareness(1)
         except:
@@ -24,7 +28,13 @@ class NuevaReservaView(tk.Toplevel):
         self.grab_set()
         self.crear_ui()
         self.cargar_datos()
+        self.actualizar_servicios()
+        self.actualizar_listas_combos()
 
+        if self.editar_reserva:
+            self.preparar_edicion(editar_reserva)
+
+    #metodo para crear la interfaz de usuario del panel de nueva reserva
     def crear_ui(self):
         container = tk.Frame(self, bg="white", padx=30, pady=20)
         container.pack(fill="both", expand=True)
@@ -136,18 +146,10 @@ class NuevaReservaView(tk.Toplevel):
         duracion_frame = tk.Frame(container, bg="white")
         duracion_frame.grid(row=8, column=0, sticky="w", pady=(5, 15))
         
-        self.entry_duracion = tk.Entry(
-            duracion_frame,
-            width=10,
-            highlightthickness=1,
-            highlightbackground="#CCC",
-            relief="flat"
-        )
-        self.entry_duracion.pack(
-            side="left",
-            ipady=3
-        )
-        ttk.Combobox(duracion_frame, values=["Horas", "Días"], width=8, state="readonly").pack(side="left", padx=5)
+        self.entry_duracion = tk.Entry(duracion_frame, width=10, font=("Segoe UI", 10))
+        self.entry_duracion.pack(side="left")
+
+        tk.Label(duracion_frame, text="horas", bg="white", font=("Segoe UI", 10)).pack(side="left", padx=5)
 
         # Fila 4: Botones Finales
         btn_cancelar = tk.Button(container, text="Cancelar", bg="white", relief="flat", 
@@ -167,8 +169,8 @@ class NuevaReservaView(tk.Toplevel):
         )
         btn_confirmar.grid(row=9, column=1, sticky="e", pady=20)
 
+    #metodo para cargar los datos de clientes y servicios en los combos al abrir la ventana
     def cargar_datos(self):
-
         clientes = self.controller.cliente_controller.listar_clientes()
         servicios = self.controller.servicio_controller.listar_servicios()
 
@@ -184,66 +186,32 @@ class NuevaReservaView(tk.Toplevel):
             f"{i} - {servicio.nombre}"
             for i, servicio in enumerate(servicios)
         ]
-    """
-    def guardar_reserva(self):
 
-        try:
-            nombre_cliente = self.combo_cliente.get()
-            servicio_texto = self.combo_servicio.get()
-
-            if not servicio_texto:
-                raise Exception(
-                    "Seleccione un servicio"
-                )
-
-            indice_servicio = int(
-                servicio_texto.split(" - ")[0]
-            )
-
-            duracion = int(
-                self.entry_duracion.get()
-            )
-
-            exito, mensaje = self.controller.crear_reserva(
-                nombre_cliente,
-                indice_servicio,
-                duracion
-            )
-
-            if exito:
-                messagebox.showinfo(
-                    "Éxito",
-                    mensaje
-                )
-
-                self.parent_panel.cargar_reservas()
-                self.destroy()
-
-            else:
-                messagebox.showerror(
-                    "Error",
-                    mensaje
-                )
-
-        except Exception as e:
-            messagebox.showerror(
-                "Error",
-                str(e)
-            )
-    """
+    #metodo para guardar la reserva al hacer click en confirmar, con validaciones y llamada al controlador
     def guardar_reserva(self):
         try:
-            cliente = self.combo_cliente.get()
+            # .get().strip() elimina espacios invisibles que puedan arruinar la búsqueda
+            cliente = self.combo_cliente.get().strip()
             servicio_raw = self.combo_servicio.get()
             fecha = self.date_fecha.get()
             duracion = self.entry_duracion.get()
 
             if not cliente or not servicio_raw or not duracion:
                 raise Exception("Por favor rellene todos los campos")
-
-            indice_ser = int(servicio_raw.split(" - ")[0])
             
-            # Llamada al controlador
+            if not duracion.isdigit():
+                raise Exception("La duración debe ser un número entero.")
+            
+            # Extraemos el índice del servicio
+            try:
+                indice_ser = int(servicio_raw.split(" - ")[0])
+            except:
+                raise Exception("Seleccione un servicio válido de la lista")
+
+            #debugging prints para verificar datos antes de enviar al controlador
+            #print(f"DEBUG: Enviando Cliente -> '{cliente}'")
+            #print(f"DEBUG: Enviando Índice Servicio -> {indice_ser}")
+
             exito, mensaje = self.controller.crear_reserva(cliente, indice_ser, duracion, fecha)
 
             if exito:
@@ -251,28 +219,48 @@ class NuevaReservaView(tk.Toplevel):
                 self.parent_panel.cargar_reservas()
                 self.destroy()
             else:
+                # Si entra aquí, el controlador devolvió False
                 messagebox.showerror("Error", mensaje)
 
         except Exception as e:
             messagebox.showerror("Validación", str(e))
-            
+
+    #metodo para actualizar la lista de servicios disponibles en el combo según el tipo seleccionado
     def actualizar_servicios(self, event=None):
-
         tipo = self.combo_tipo.get().lower()
-
         servicios = self.controller.servicio_controller.listar_servicios()
 
-        filtrados = []
+        filtrados = [] #lista temporal para almacenar servicios filtrados por tipo
 
+        #filtrar servicios por tipo y preparar strings para mostrar en el combo
         for i, servicio in enumerate(servicios):
-
             if servicio.tipo.lower() == tipo:
-
                 filtrados.append(
                     f"{i} - {servicio.nombre}"
                 )
 
+        #actualizar valores del combo de servicios con los filtrados
         self.combo_servicio["values"] = filtrados
-
         if filtrados:
             self.combo_servicio.current(0)
+
+    #metodo para preparar la ventana en modo edición, funcion no en uso
+    def preparar_edicion(self, reserva):
+        self.combo_cliente.set(reserva.cliente.nombre)
+        for val in self.combo_servicio['values']:
+            if reserva.servicio.nombre in val:
+                self.combo_servicio.set(val)
+                break
+    
+        self.entry_duracion.insert(0, str(reserva.duracion))
+        self.date_fecha.set_date(reserva.fecha)
+
+    # metodo para actualizar las listas en los combobox, funcion no en uso
+    def actualizar_listas_combos(self):
+    # Buscamos datos frescos de los controladores
+        clientes = self.controller.cliente_controller.listar_clientes()
+        servicios = self.controller.servicio_controller.listar_servicios()
+    
+    # Asignamos los valores a los widgets
+        self.combo_cliente['values'] = [c.nombre for c in clientes]
+        self.combo_servicio['values'] = [f"{i} - {s.nombre}" for i, s in enumerate(servicios)]
